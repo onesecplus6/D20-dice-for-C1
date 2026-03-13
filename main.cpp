@@ -3,9 +3,9 @@
 #include <string>
 #include <omp.h>
 #include <string.h>
-#include <stdio.h> // 用于 sprintf
-#include <time.h>  // 用于 srand 和 time
-#include <stdlib.h> // 用于 rand
+#include <stdio.h> // 脫脙脫脷 sprintf
+#include <time.h>  // 脫脙脫脷 srand 潞脥 time
+#include <stdlib.h> // 脫脙脫脷 rand
 #include <math.h>
 #include "bmp.h"
 #include "stl.h"
@@ -13,12 +13,12 @@
 //#define Pi 3.14159265358979323846264338328
 
 using namespace std;
-// 全局变量
+// 脠芦戮脰卤盲脕驴
 HBITMAP g_hDIBBitmap = NULL;
 void* g_pDIBPixelData = NULL;
 int g_bitmapWidth = 1600;
 int g_bitmapHeight = 900;
-int g_bitsPerPixel = 24; // 32位 BGRA (或RGBA，取决于系统和DIB_RGB_COLORS的默认解释)
+int g_bitsPerPixel = 24; // 32脦禄 BGRA (禄貌RGBA拢卢脠隆戮枚脫脷脧碌脥鲁潞脥DIB_RGB_COLORS碌脛脛卢脠脧陆芒脢脥)
 int windowX, windowY;
 char g_szClassName[] = "MyDynamicImageViewerClass";
 bmp24 lsbmp,b,inimg,loading,bg,old_show,dice_faces[20];
@@ -27,28 +27,28 @@ bool update,dragging=false,got_para;
 int *movex;
 int *movey;
 stlfile dice_ori,dice_pre[40],dice_bak,dice_end;
-// 动态变化的参数，例如，用于生成颜色
+// 露炉脤卢卤盲禄炉碌脛虏脦脢媒拢卢脌媒脠莽拢卢脫脙脫脷脡煤鲁脡脩脮脡芦
 int g_colorOffset = 0;
-const int TIMER_ID = 1; // 计时器ID
+const int TIMER_ID = 1; // 录脝脢卤脝梅ID
 RGBPixel rgbp;
 HSVPixel hsvp;
-// 函数声明
+// 潞炉脢媒脡霉脙梅
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 int g_bitmapStride = 0,tmpy;
 
-// 定义一个结构体来存储找到的显示器信息
+// 露篓脪氓脪禄赂枚陆谩鹿鹿脤氓脌麓麓忙麓垄脮脪碌陆碌脛脧脭脢戮脝梅脨脜脧垄
 typedef struct MonitorInfo {
 	HMONITOR hMonitor;
-	RECT     rcMonitor;	// 监视器的整个显示区域
-    RECT     rcWork;	   // 监视器的工作区域（不包括任务栏等）
-    BOOL     bPrimary;     // 是否是主显示器
+	RECT     rcMonitor;	// 录脿脢脫脝梅碌脛脮没赂枚脧脭脢戮脟酶脫貌
+    RECT     rcWork;	   // 录脿脢脫脝梅碌脛鹿陇脳梅脟酶脫貌拢篓虏禄掳眉脌篓脠脦脦帽脌赂碌脠拢漏
+    BOOL     bPrimary;     // 脢脟路帽脢脟脰梅脧脭脢戮脝梅
 } MonitorInfo;
 
-// 存储所有显示器的信息
-MonitorInfo g_monitors[16]; // 假设最多16个显示器
+// 麓忙麓垄脣霉脫脨脧脭脢戮脝梅碌脛脨脜脧垄
+MonitorInfo g_monitors[16]; // 录脵脡猫脳卯露脿16赂枚脧脭脢戮脝梅
 int g_monitorCount = 0;
 
-// EnumDisplayMonitors 的回调函数
+// EnumDisplayMonitors 碌脛禄脴碌梅潞炉脢媒
 BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
     MONITORINFOEX monitorInfo;
     monitorInfo.cbSize = sizeof(MONITORINFOEX);
@@ -62,24 +62,24 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
             g_monitorCount++;
         }
     }
-    return TRUE; // 继续枚举下一个监视器
+    return TRUE; // 录脤脨酶脙露戮脵脧脗脪禄赂枚录脿脢脫脝梅
 }
-// 创建 DIB Section
-// 修改 CreateDIBSectionBitmap 函数以计算 stride
+// 麓麓陆篓 DIB Section
+// 脨脼赂脛 CreateDIBSectionBitmap 潞炉脢媒脪脭录脝脣茫 stride
 HBITMAP CreateDIBSectionBitmap(HDC hdc, int width, int height, int bitsPerPixel, void** pBits) {
     BITMAPINFO bmi;
     ZeroMemory(&bmi, sizeof(BITMAPINFO));
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = width;
-    bmi.bmiHeader.biHeight = -height; // 负高度表示顶到底的DIB
+    bmi.bmiHeader.biHeight = -height; // 赂潞赂脽露脠卤铆脢戮露楼碌陆碌脳碌脛DIB
     bmi.bmiHeader.biPlanes = 1;
     bmi.bmiHeader.biBitCount = bitsPerPixel;
-    bmi.bmiHeader.biCompression = BI_RGB; // 无压缩
+    bmi.bmiHeader.biCompression = BI_RGB; // 脦脼脩鹿脣玫
 
-    // 计算 stride (每行的实际字节数，包括填充)
-    // 对于 BI_RGB 压缩，Windows GDI 会自动进行 4 字节对齐
+    // 录脝脣茫 stride (脙驴脨脨碌脛脢碌录脢脳脰陆脷脢媒拢卢掳眉脌篓脤卯鲁盲)
+    // 露脭脫脷 BI_RGB 脩鹿脣玫拢卢Windows GDI 禄谩脳脭露炉陆酶脨脨 4 脳脰陆脷露脭脝毛
     int bytesPerPixel = bitsPerPixel / 8;
-    g_bitmapStride = ((width * bytesPerPixel + 3) / 4) * 4; // 确保是4的倍数
+    g_bitmapStride = ((width * bytesPerPixel + 3) / 4) * 4; // 脠路卤拢脢脟4碌脛卤露脢媒
 
     return CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, pBits, NULL, 0);
 }
@@ -100,10 +100,10 @@ void showdice(float dis,int x,int y,float bs){
 	int maxx,maxy,minx,miny,loctmp;
 	bool calced;
     for(int i=0;i<40;i++)memcpy(dice_pre[i].f,dice_ori.f,dice_ori.number*sizeof(facet));
-    // 设置线程数为12
+    // 脡猫脰脙脧脽鲁脤脢媒脦陋12
     omp_set_num_threads(12);
     
-    // 简单的并行化：只对最外层i循环并行
+    // 录貌碌楼碌脛虏垄脨脨禄炉拢潞脰禄露脭脳卯脥芒虏茫i脩颅禄路虏垄脨脨
     #pragma omp parallel for private(ux, uy, vx, vy, det, minx, maxx, miny, maxy, loctmp, px, py, u, v, calced) schedule(dynamic)
     for(int i=0;i<40;i++)
     {
@@ -133,35 +133,35 @@ void showdice(float dis,int x,int y,float bs){
 			int y_from = max((int)floor(y_min),0);
 			int y_to   = min((int)ceil(y_max),lsbmp.hei-1);
 			if(y_from>=lsbmp.hei||y_to<0)continue; 
-			// 对每个整数 y 扫描
+			// 露脭脙驴赂枚脮没脢媒 y 脡篓脙猫
 			for (int yy = y_from; yy <= y_to; ++yy) {
-				double x_left = INFINITY;   // 左边界初始化为正无穷
-				double x_right = -INFINITY; // 右边界初始化为负无穷
-				// 处理三条边
+				double x_left = INFINITY;   // 脳贸卤脽陆莽鲁玫脢录禄炉脦陋脮媒脦脼脟卯
+				double x_right = -INFINITY; // 脫脪卤脽陆莽鲁玫脢录禄炉脦陋赂潞脦脼脟卯
+				// 麓娄脌铆脠媒脤玫卤脽
 				for (int ii = 0; ii < 3; ++ii) {
 					double xa = dice_pre[i].f[j].vertex[ii].x+x, ya = dice_pre[i].f[j].vertex[ii].y+y;
 					double xb = dice_pre[i].f[j].vertex[(ii + 1) % 3].x+x, yb = dice_pre[i].f[j].vertex[(ii + 1) % 3].y+y;
-					// 保证 ya <= yb 以便判断范围
+					// 卤拢脰陇 ya <= yb 脪脭卤茫脜脨露脧路露脦搂
 					if (ya > yb) {
 						double tmp;
 						tmp = xa; xa = xb; xb = tmp;
 						tmp = ya; ya = yb; yb = tmp;
 					}
-					// 检查当前 y 是否在边的纵坐标范围内（含端点）
+					// 录矛虏茅碌卤脟掳 y 脢脟路帽脭脷卤脽碌脛脳脻脳酶卤锚路露脦搂脛脷拢篓潞卢露脣碌茫拢漏
 					if (yy < ya - EPS || yy > yb + EPS)
 						continue;
-					// 处理水平边
+					// 麓娄脌铆脣庐脝陆卤脽
 					if (fabs(ya - yb) < EPS) {
-						if (fabs(yy - ya) < EPS) { // y 恰好等于边的纵坐标
+						if (fabs(yy - ya) < EPS) { // y 脟隆潞脙碌脠脫脷卤脽碌脛脳脻脳酶卤锚
 							double xmin = fmin(xa, xb);
 							double xmax = fmax(xa, xb);
 							if (xmin < x_left)  x_left = xmin;
 							if (xmax > x_right) x_right = xmax;
 						}
 					}
-					// 普通边，线性插值求交点
+					// 脝脮脥篓卤脽拢卢脧脽脨脭虏氓脰碌脟贸陆禄碌茫
 					else {
-						double tt = (yy - ya) / (yb - ya); // t 在 [0,1] 内
+						double tt = (yy - ya) / (yb - ya); // t 脭脷 [0,1] 脛脷
 						double x_inst = xa + tt * (xb - xa);
 						if (x_inst < x_left)  x_left = x_inst;
 						if (x_inst > x_right) x_right = x_inst;
@@ -171,8 +171,8 @@ void showdice(float dis,int x,int y,float bs){
 				if (0 > x_right) continue;
 				if(x_right>=lsbmp.wid)x_right=lsbmp.wid-1;
 				if(x_left<0)x_left=0;
-				// 根据左右边界输出整数点
-				if (x_left <= x_right + EPS) { // 有效区间
+				// 赂霉戮脻脳贸脫脪卤脽陆莽脢盲鲁枚脮没脢媒碌茫
+				if (x_left <= x_right + EPS) { // 脫脨脨搂脟酶录盲
 					int ix_min = (int)ceil(x_left - EPS);
 					int ix_max = (int)floor(x_right + EPS);
 					for (int xx = ix_min; xx <= ix_max; ++xx) 
@@ -232,10 +232,10 @@ void showdice_bak(float dis,int x,int y,float bs){
 	int maxx,maxy,minx,miny,loctmp;
 	bool calced;
     for(int i=0;i<40;i++)memcpy(dice_pre[i].f,dice_ori.f,dice_ori.number*sizeof(facet));
-    // 设置线程数为12
+    // 脡猫脰脙脧脽鲁脤脢媒脦陋12
     omp_set_num_threads(12);
     
-    // 简单的并行化：只对最外层i循环并行
+    // 录貌碌楼碌脛虏垄脨脨禄炉拢潞脰禄露脭脳卯脥芒虏茫i脩颅禄路虏垄脨脨
     #pragma omp parallel for private(ux, uy, vx, vy, det, minx, maxx, miny, maxy, loctmp, px, py, u, v, calced) schedule(dynamic)
     for(int i=0;i<40;i++)
     {
@@ -266,7 +266,7 @@ void showdice_bak(float dis,int x,int y,float bs){
             miny=max((int)floorf(fminf(fminf(dice_pre[i].f[j].vertex[0].y,dice_pre[i].f[j].vertex[1].y),dice_pre[i].f[j].vertex[2].y))+y,0);
             maxy=min((int) ceilf(fmaxf(fmaxf(dice_pre[i].f[j].vertex[0].y,dice_pre[i].f[j].vertex[1].y),dice_pre[i].f[j].vertex[2].y))+y,lsbmp.hei-1);
             
-            // 内部循环不并行化，避免过度开销
+            // 脛脷虏驴脩颅禄路虏禄虏垄脨脨禄炉拢卢卤脺脙芒鹿媒露脠驴陋脧煤
             for(int yy=miny; yy<=maxy; yy++)
             {
                 for(int xx=minx; xx<=maxx; xx++)
@@ -342,7 +342,7 @@ void get_wanted_axis(vec3d R1, vec3d R2, vec3d R3){
 void UpdateBitmapPixels() {
     if (g_pDIBPixelData == NULL) return;
     unsigned char* pixels = (unsigned char*)g_pDIBPixelData;
-    int bytesPerPixel = g_bitsPerPixel / 8; // 例如，对于 24 位，bytesPerPixel = 3
+    int bytesPerPixel = g_bitsPerPixel / 8; // 脌媒脠莽拢卢露脭脫脷 24 脦禄拢卢bytesPerPixel = 3
     if(got_para==false){
 		GetCursorPos(&mouse_start);
 		tmpy = 2559 - mouse_start.y + windowY;
@@ -505,7 +505,7 @@ HBITMAP copybmp(HDC hdc, bmp24 input){
     for (int y = 0; y < g_bitmapHeight; ++y) {
         int lineStart = y * g_bitmapStride;
         for (int x = 0; x < g_bitmapWidth; ++x) {
-            int index = lineStart + x * 3; // 在当前行内的偏移量
+            int index = lineStart + x * 3; // 脭脷碌卤脟掳脨脨脛脷碌脛脝芦脪脝脕驴
             int loc=(g_bitmapHeight-1-y)*g_bitmapWidth+x;
             pixels[index + 0] = input.p[loc].B;
             pixels[index + 1] = input.p[loc].G;
@@ -525,24 +525,24 @@ public:
     ~NamedPipeClient(){disconnect();}
     bool connect() {
         hPipe = CreateFileA(
-            pipeName.c_str(),           // 管道名称
-            GENERIC_READ | GENERIC_WRITE, // 读写权限
-            FILE_SHARE_READ | FILE_SHARE_WRITE, // 共享模式
-            NULL,                       // 默认安全属性
-            OPEN_EXISTING,              // 打开已存在的管道
-            FILE_ATTRIBUTE_NORMAL,      // 文件属性
-            NULL                        // 无模板文件
+            pipeName.c_str(),           // 鹿脺碌脌脙没鲁脝
+            GENERIC_READ | GENERIC_WRITE, // 露脕脨麓脠篓脧脼
+            FILE_SHARE_READ | FILE_SHARE_WRITE, // 鹿虏脧铆脛拢脢陆
+            NULL,                       // 脛卢脠脧掳虏脠芦脢么脨脭
+            OPEN_EXISTING,              // 麓貌驴陋脪脩麓忙脭脷碌脛鹿脺碌脌
+            FILE_ATTRIBUTE_NORMAL,      // 脦脛录镁脢么脨脭
+            NULL                        // 脦脼脛拢掳氓脦脛录镁
         );
         
         if (hPipe == INVALID_HANDLE_VALUE) 
 		{
             DWORD error = GetLastError();
             /*
-            std::cerr << "无法连接到管道: " << pipeName << std::endl;
-            std::cerr << "错误代码: " << error << std::endl;
-            if (error == ERROR_PIPE_BUSY){std::cerr << "管道正忙，请稍后重试" << std::endl;}
-			else if (error == ERROR_FILE_NOT_FOUND) {std::cerr << "管道不存在，请确保服务器正在运行" << std::endl;}
-			else if (error == ERROR_ACCESS_DENIED) {std::cerr << "访问被拒绝" << std::endl;}
+            std::cerr << "脦脼路篓脕卢陆脫碌陆鹿脺碌脌: " << pipeName << std::endl;
+            std::cerr << "麓铆脦贸麓煤脗毛: " << error << std::endl;
+            if (error == ERROR_PIPE_BUSY){std::cerr << "鹿脺碌脌脮媒脙娄拢卢脟毛脡脭潞贸脰脴脢脭" << std::endl;}
+			else if (error == ERROR_FILE_NOT_FOUND) {std::cerr << "鹿脺碌脌虏禄麓忙脭脷拢卢脟毛脠路卤拢路镁脦帽脝梅脮媒脭脷脭脣脨脨" << std::endl;}
+			else if (error == ERROR_ACCESS_DENIED) {std::cerr << "路脙脦脢卤禄戮脺戮酶" << std::endl;}
 			*/
             return false;
         }
@@ -557,29 +557,29 @@ public:
     }
     bool sendCommand(const std::string& command, std::string& response) {
         if (hPipe == INVALID_HANDLE_VALUE) {
-            std::cerr << "未连接到管道" << std::endl;
+            std::cerr << "脦麓脕卢陆脫碌陆鹿脺碌脌" << std::endl;
             return false;
         }
         DWORD bytesWritten;
         BOOL writeResult = WriteFile(
-            hPipe,                      // 管道句柄
-            command.c_str(),            // 要发送的数据
-            static_cast<DWORD>(command.length()), // 数据长度
-            &bytesWritten,              // 实际写入的字节数
-            NULL                        // 非重叠I/O
+            hPipe,                      // 鹿脺碌脌戮盲卤煤
+            command.c_str(),            // 脪陋路垄脣脥碌脛脢媒戮脻
+            static_cast<DWORD>(command.length()), // 脢媒戮脻鲁陇露脠
+            &bytesWritten,              // 脢碌录脢脨麓脠毛碌脛脳脰陆脷脢媒
+            NULL                        // 路脟脰脴碌镁I/O
         );
         if (!writeResult) {
-            std::cerr << "发送命令失败，错误代码: " << GetLastError() << std::endl;
+            std::cerr << "路垄脣脥脙眉脕卯脢搂掳脺拢卢麓铆脦贸麓煤脗毛: " << GetLastError() << std::endl;
             return false;
         }
         char buffer[2048];
         DWORD bytesRead;
         BOOL readResult = ReadFile(
-            hPipe,                      // 管道句柄
-            buffer,                     // 接收缓冲区
-            sizeof(buffer) - 1,         // 缓冲区大小
-            &bytesRead,                 // 实际读取的字节数
-            NULL                        // 非重叠I/O
+            hPipe,                      // 鹿脺碌脌戮盲卤煤
+            buffer,                     // 陆脫脢脮禄潞鲁氓脟酶
+            sizeof(buffer) - 1,         // 禄潞鲁氓脟酶麓贸脨隆
+            &bytesRead,                 // 脢碌录脢露脕脠隆碌脛脳脰陆脷脢媒
+            NULL                        // 路脟脰脴碌镁I/O
         );
         if (readResult && bytesRead > 0) {
             buffer[bytesRead] = '\0';
@@ -587,7 +587,7 @@ public:
             return true;
         } else {
             DWORD error = GetLastError();
-            std::cerr << "读取响应失败，错误代码: " << error << std::endl;
+            std::cerr << "露脕脠隆脧矛脫娄脢搂掳脺拢卢麓铆脦贸麓煤脗毛: " << error << std::endl;
             return false;
         }
     }
@@ -672,7 +672,7 @@ int pipes(){
     std::string command = "getDeivice"; 
     NamedPipeClient client(pipeName);
     if (!client.connect()) {
-        //std::cerr << "连接失败，请确保服务器端正在运行" << std::endl;
+        //std::cerr << "脕卢陆脫脢搂掳脺拢卢脟毛脠路卤拢路镁脦帽脝梅露脣脮媒脭脷脭脣脨脨" << std::endl;
         return 1;
     }
     std::string response;
@@ -693,7 +693,7 @@ int pipes(){
 		loc=charfind(params,"obliquity");
 		sscanf(&params[loc+11],"%lf",&stan);
     } else {
-        //std::cerr << "命令执行失败" << std::endl;
+        //std::cerr << "脙眉脕卯脰麓脨脨脢搂掳脺" << std::endl;
         return 1;
     }
     return 0;
@@ -725,13 +725,13 @@ void make_mask(){
 			double xw;
 			xw=i*stan-j+1440.0+pianyi;
 			xw=fmod(xw,jiange);
-			b.p[i*b.wid+j].G=(int)(xw/jiange*40.0)+1;
+			b.p[i*b.wid+j].G=(int)(xw/jiange*40.0);
 			xw=xw+1.0/3.0;
 			xw=fmod(xw,jiange);
-			b.p[i*b.wid+j].R=(int)(xw/jiange*40.0)+1;
+			b.p[i*b.wid+j].R=(int)(xw/jiange*40.0);
 			xw=xw+jiange-2.0/3.0;
 			xw=fmod(xw,jiange);
-			b.p[i*b.wid+j].B=(int)(xw/jiange*40.0)+1;
+			b.p[i*b.wid+j].B=(int)(xw/jiange*40.0);
 		}
 	}
 }
@@ -791,8 +791,7 @@ void make_dice(){
 	{
 		dice_pre[i].copyfrom(dice_ori);
 		squeeze_x[i]=tan(20*Pi/180)*(19.5-i)/19.5;
-		if(i%1==0)face_color[i]=hsv2rgb(HSVPixel(rand()%360,0.5,1));
-		else face_color[i]=face_color[i-1];
+		face_color[i]=hsv2rgb(HSVPixel(rand()%360,0.5,1));
 	}
 	bmp24 dice_surface;
 	bool sfd=false;
@@ -954,7 +953,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     WNDCLASSEX wc;
     HWND hwnd;
     MSG Msg;
-    srand((unsigned int)time(NULL)); // 初始化随机数生成器
+    srand((unsigned int)time(NULL)); // 鲁玫脢录禄炉脣忙禄煤脢媒脡煤鲁脡脝梅
     
     update = false;
     init();
@@ -970,7 +969,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hInstance     = hInstance;
     wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // 可以不使用，因为会被位图覆盖
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); // 驴脡脪脭虏禄脢鹿脫脙拢卢脪貌脦陋禄谩卤禄脦禄脥录赂虏赂脟
     wc.lpszMenuName  = NULL;
     wc.lpszClassName = g_szClassName;
     wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
@@ -980,8 +979,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
-    // --- 枚举所有显示器并找到目标显示器 ---
-    g_monitorCount = 0; // 重置计数器
+    // --- 脙露戮脵脣霉脫脨脧脭脢戮脝梅虏垄脮脪碌陆脛驴卤锚脧脭脢戮脝梅 ---
+    g_monitorCount = 0; // 脰脴脰脙录脝脢媒脝梅
     EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
 
     MonitorInfo* targetMonitor = NULL;
@@ -993,7 +992,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
     }
 
-    // 如果没有找到，则使用主显示器
+    // 脠莽鹿没脙禄脫脨脮脪碌陆拢卢脭貌脢鹿脫脙脰梅脧脭脢戮脝梅
     if (targetMonitor == NULL && g_monitorCount > 0) {
         targetMonitor = &g_monitors[0];
     } else if (targetMonitor == NULL && g_monitorCount == 0) {
@@ -1009,7 +1008,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         WS_EX_APPWINDOW | WS_EX_TOPMOST,
         g_szClassName,
         "Dynamic Image Viewer",
-        WS_POPUP, // 无边框
+        WS_POPUP, // 脦脼卤脽驴貌
         windowX, windowY,
         g_bitmapWidth, g_bitmapHeight,
         NULL,
@@ -1023,7 +1022,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
-    // 获取屏幕DC来创建DIB Section
+    // 禄帽脠隆脝脕脛禄DC脌麓麓麓陆篓DIB Section
     HDC hdcScreen = GetDC(NULL);
     if (hdcScreen == NULL) {
         MessageBox(hwnd, "Failed to get screen DC!", "Error", MB_ICONERROR);
@@ -1035,16 +1034,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //g_hDIBBitmap = CreateDIBSectionBitmap(hdcScreen, lsbmp.wid, lsbmp.hei, 24, &g_pDIBPixelData);
 	g_hDIBBitmap = copybmp(hdcScreen, lsbmp);
 	SetWindowPos(hwnd, NULL, windowX, windowY, g_bitmapWidth, g_bitmapHeight, SWP_NOZORDER | SWP_FRAMECHANGED);
-    ReleaseDC(NULL, hdcScreen); // 释放屏幕DC
+    ReleaseDC(NULL, hdcScreen); // 脢脥路脜脝脕脛禄DC
     if (g_hDIBBitmap == NULL || g_pDIBPixelData == NULL) {
         MessageBox(hwnd, "Failed to create DIB Section!", "Error", MB_ICONERROR);
         DestroyWindow(hwnd);
         return 1;
     }
-    // 初始更新一次像素数据
+    // 鲁玫脢录赂眉脨脗脪禄麓脦脧帽脣脴脢媒戮脻
     UpdateBitmapPixels();
 	SetWindowPos(hwnd, NULL, windowX, windowY, g_bitmapWidth, g_bitmapHeight, SWP_NOZORDER | SWP_FRAMECHANGED);
-    // 设置一个计时器，每30毫秒触发一次
+    // 脡猫脰脙脪禄赂枚录脝脢卤脝梅拢卢脙驴30潞脕脙毛麓楼路垄脪禄麓脦
     SetTimer(hwnd, TIMER_ID, 1 , NULL);
 
     ShowWindow(hwnd, nCmdShow);
@@ -1057,7 +1056,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
     
 
-    // 清理资源
+    // 脟氓脌铆脳脢脭麓
     if (g_hDIBBitmap != NULL) {
         DeleteObject(g_hDIBBitmap);
     }
@@ -1072,10 +1071,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
         case WM_TIMER: {
             if (wParam == TIMER_ID) if(update==true||got_para==false){
-                // 修改位图数据
+                // 脨脼赂脛脦禄脥录脢媒戮脻
                 UpdateBitmapPixels();
-                // 触发窗口重绘，InvalidateRect会使整个客户区无效
-                InvalidateRect(hwnd, NULL, FALSE); // FALSE表示背景不擦除，减少闪烁
+                // 麓楼路垄麓掳驴脷脰脴禄忙拢卢InvalidateRect禄谩脢鹿脮没赂枚驴脥禄搂脟酶脦脼脨搂
+                InvalidateRect(hwnd, NULL, FALSE); // FALSE卤铆脢戮卤鲁戮掳虏禄虏脕鲁媒拢卢录玫脡脵脡脕脣赂
                 //update=false;
             }
             break;
@@ -1313,7 +1312,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         }
 
         case WM_DESTROY: {
-            KillTimer(hwnd, TIMER_ID); // 销毁计时器
+            KillTimer(hwnd, TIMER_ID); // 脧煤禄脵录脝脢卤脝梅
             PostQuitMessage(0);
             break;
         }
